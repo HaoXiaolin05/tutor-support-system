@@ -64,25 +64,30 @@ export default function CreateEditAction({ sessions, setSessions, selectedSessio
     const today = new Date();
     const selectedDate = new Date(date);
 
-    // 2. Must be after now + 2 hours
-    if (isEdit) {
-      if (selectedDate.toDateString() === today.toDateString()) {
-        const nowPlus2 = new Date();
-        nowPlus2.setHours(nowPlus2.getHours() + 2);
+    // 2. Must be after now + 2 hours && Date must not be in the past
+    if (selectedDate.toDateString() === today.toDateString()) {
+      const nowPlus2 = new Date();
+      nowPlus2.setHours(nowPlus2.getHours() + 2);
 
-        const sessionStart = new Date(`${date}T${startTime}`);
+      const sessionStart = new Date(`${date}T${startTime}`);
 
-        if (sessionStart < nowPlus2)
-          return "A edited session must start at least 2 hours from now.";
-      }
+      if (sessionStart < nowPlus2)
+        return isEdit
+        ? "An edited session must start at least 2 hours from now."
+        : "A new session must start at least 2 hours from now.";
+    }
+    today.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      return "The selected date is in the past.";
     }
 
     // 3. No overlap with tutor’s existing sessions
     const tutorSessions = sessions.filter(s => s.tutorID === user.id);
 
     for (const s of tutorSessions) {
-      // Skip comparing with itself during edit
-      if (isEdit && s.id === selectedSession.id) continue;
+      // Skip comparing with itself during edit or it was the canceled session
+      if ((isEdit && s.id === selectedSession.id) || s.state === "Canceled") continue;
 
       if (s.date !== date) continue; // different day = OK
 
