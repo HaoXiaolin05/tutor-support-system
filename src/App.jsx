@@ -21,6 +21,7 @@ import FileDetails from './pages/Resource/FileDetails'
 import TutorAvailability from './pages/RegisterCourse/TutorAvailability'
 import CreateClass from './pages/RegisterCourse/CreateClass'
 import ManageProgram from './pages/RegisterCourse/ProgramManagement'
+import CourseStructureStudent from './pages/Resource/CourseStructureStudent'
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
       {/* RESOURCE MODULE */}
       <Route path="/user/private" element={<PrivateStorage />} />
       <Route path="/courses" element={<CourseStructure/>} />
+      <Route path="/courses/student" element={<CourseStructureStudent />} />
       {/* SCHEDULE MODULE */}
       <Route path="/sessions" element={<SchedulingPage isTutor = {false} />} />
       <Route path="/sessions/register" element={<SchedulingPage isRegister = {true} />} />
